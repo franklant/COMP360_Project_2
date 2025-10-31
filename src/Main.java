@@ -93,7 +93,8 @@ public class Main extends JFrame implements ActionListener
         _gridBagConstraints.gridwidth = 2;
         _gridBagConstraints.gridheight = 2;
         _sceneManager.get("MainScene").add(_paymentInfoButton, _gridBagConstraints);
-    }
+    } // mainScene()
+
     public void paymentInfoScene()
     {
         _gridBagConstraints.fill = GridBagConstraints.BOTH;
@@ -101,7 +102,7 @@ public class Main extends JFrame implements ActionListener
         _mainMenuButton.addActionListener(this);
 
         _sceneManager.get("PaymentInfoScene").add(_mainMenuButton);
-    }
+    } // paymentInfoScene()
     public static void infoVisibleTest()
     {
         // New Dev Test
