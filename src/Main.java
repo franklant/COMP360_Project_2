@@ -13,7 +13,10 @@ public class Main extends JFrame implements ActionListener
 {
     Dictionary<String, JPanel> _sceneManager;                    // manages the JPanels responsible for different pages of the app.
     JButton _mainMenuButton;
+    JButton _payEmployeeButton;
+    JButton _addBonusButton;
     JButton _paymentInfoButton;
+    GridBagConstraints _gridBagConstraints;
 
     public void configureWindow()
     {
@@ -32,7 +35,7 @@ public class Main extends JFrame implements ActionListener
     {
         // responsible for containing all the GUI/UI components and layout
         this.setLayout(new GridBagLayout());                    // instance the layout for all components
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        _gridBagConstraints = new GridBagConstraints();
 
         // LAYOUT FUNCTIONS LIKE A GRID. KEEP THAT IN MIND
         // Position components based off position on a grid. Should be pretty simple in theory.
@@ -42,14 +45,11 @@ public class Main extends JFrame implements ActionListener
         _sceneManager.get("MainScene").add(new JLabel("Main Scene"));
         _sceneManager.get("PaymentInfoScene").add(new JLabel("Payment Info Scene"));
 
-        _paymentInfoButton = new JButton("Request Payment Information");
-        _paymentInfoButton.addActionListener(this);           // enable the program to listen for actions from btn
+        // -- MAIN SCENE -- //
+        mainScene();
 
-        _mainMenuButton = new JButton("Main Menu");
-        _mainMenuButton.addActionListener(this);
-
-        _sceneManager.get("MainScene").add(_paymentInfoButton);
-        _sceneManager.get("PaymentInfoScene").add(_mainMenuButton);
+        // -- PAYMENT INFORMATION PANEL -- //
+        paymentInfoScene();
     } // interfaceContents()
 
     public void createScenes()
@@ -71,6 +71,37 @@ public class Main extends JFrame implements ActionListener
         }
     } // createScenes()
 
+    public void mainScene()
+    {
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+
+        _paymentInfoButton = new JButton("Request Payment Information");
+        _paymentInfoButton.addActionListener(this);           // enable the program to listen for actions from btn
+
+        _payEmployeeButton = new JButton("Pay Employee");
+        _payEmployeeButton.addActionListener(this);
+
+        // Add Components to Scene
+        _gridBagConstraints.gridx = 2;
+        _gridBagConstraints.gridy = 0;
+        _gridBagConstraints.gridwidth = 2;
+        _gridBagConstraints.gridheight = 2;
+        _sceneManager.get("MainScene").add(_payEmployeeButton, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 2;
+        _gridBagConstraints.gridwidth = 2;
+        _gridBagConstraints.gridheight = 2;
+        _sceneManager.get("MainScene").add(_paymentInfoButton, _gridBagConstraints);
+    }
+    public void paymentInfoScene()
+    {
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _mainMenuButton = new JButton("Main Menu");
+        _mainMenuButton.addActionListener(this);
+
+        _sceneManager.get("PaymentInfoScene").add(_mainMenuButton);
+    }
     public static void infoVisibleTest()
     {
         // New Dev Test
