@@ -42,9 +42,6 @@ public class Main extends JFrame implements ActionListener
         _sceneManager = new Hashtable<>();                      // instantiate the dictionary
         createScenes();
 
-        _sceneManager.get("MainScene").add(new JLabel("Main Scene"));
-        _sceneManager.get("PaymentInfoScene").add(new JLabel("Payment Info Scene"));
-
         // -- MAIN SCENE -- //
         mainScene();
 
@@ -73,6 +70,8 @@ public class Main extends JFrame implements ActionListener
 
     public void mainScene()
     {
+        _sceneManager.get("MainScene").add(new JLabel("Main Scene"));
+
         _gridBagConstraints.fill = GridBagConstraints.BOTH;
 
         _paymentInfoButton = new JButton("Request Payment Information");
@@ -97,6 +96,8 @@ public class Main extends JFrame implements ActionListener
 
     public void paymentInfoScene()
     {
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Payment Info Scene"));
+
         _gridBagConstraints.fill = GridBagConstraints.BOTH;
         _mainMenuButton = new JButton("Main Menu");
         _mainMenuButton.addActionListener(this);
