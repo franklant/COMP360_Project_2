@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -30,16 +31,28 @@ public class Main extends JFrame implements ActionListener
     JComboBox _developerLevelComboBox;
     JButton _submitButton;
 
-
     // Payment Info Components
     JButton _paymentInfoButton;
+    JLabel _firstNameInfoLabel;
+    JLabel _lastNameInfoLabel;
+    JLabel _socialSecurityNumberInfoLabel;
+    JLabel _developerLevelInfoLabel;
+    JLabel _onePercentSalaryInfoLabel;          // these components appear based on developer level
+    JLabel _stocksInfoLabel;
+
+    JLabel _label1;                             // additional labels to be hidden
+    JLabel _label2;
+    JComboBox _userNameComboBox;
+    JButton _showInfoButton;
+    ArrayList<Integer> _socialSecurityNumberList;
     GridBagConstraints _gridBagConstraints;
 
     public void configureWindow()
     {
         this.setTitle("Project 2 Application");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(new Dimension(720, 480));
+        this.setPreferredSize(new Dimension(720, 430));
+        this.setResizable(false);
 
         interfaceContents();
 
@@ -52,12 +65,13 @@ public class Main extends JFrame implements ActionListener
     {
         // responsible for containing all the GUI/UI components and layout
         this.setLayout(new GridBagLayout());                    // instance the layout for all components
-        _gridBagConstraints = new GridBagConstraints();
+        _socialSecurityNumberList = new ArrayList<>();
 
         // LAYOUT FUNCTIONS LIKE A GRID. KEEP THAT IN MIND
         // Position components based off position on a grid. Should be pretty simple in theory.
         _sceneManager = new Hashtable<>();                      // instantiate the dictionary
         _userManager = new Hashtable<>();
+
         createScenes();
 
         // -- MAIN SCENE -- //
@@ -68,6 +82,7 @@ public class Main extends JFrame implements ActionListener
 
         // -- NEW USER PANEL -- //
         newUserScene();
+
 
     } // interfaceContents()
 
@@ -94,7 +109,9 @@ public class Main extends JFrame implements ActionListener
     public void mainScene()
     {
         _sceneManager.get("MainScene").add(new JLabel("Main Scene"));
+        _sceneManager.get("MainScene").setLayout(new GridBagLayout());      // important to set the layout
 
+        _gridBagConstraints = new GridBagConstraints();
         _gridBagConstraints.fill = GridBagConstraints.BOTH;
 
         _paymentInfoButton = new JButton("Request Payment Information");
@@ -104,24 +121,20 @@ public class Main extends JFrame implements ActionListener
         _addNewUserButton.addActionListener(this);
 
         // Add Components to Scene
-        _gridBagConstraints.gridx = 2;
+        _gridBagConstraints.gridx = 1;
         _gridBagConstraints.gridy = 0;
-        _gridBagConstraints.gridwidth = 2;
-        _gridBagConstraints.gridheight = 2;
         _sceneManager.get("MainScene").add(_addNewUserButton, _gridBagConstraints);
 
-        _gridBagConstraints.gridx = 0;
-        _gridBagConstraints.gridy = 2;
-        _gridBagConstraints.gridwidth = 2;
-        _gridBagConstraints.gridheight = 2;
+        _gridBagConstraints.gridx = 2;
+        _gridBagConstraints.gridy = 0;
         _sceneManager.get("MainScene").add(_paymentInfoButton, _gridBagConstraints);
     } // mainScene()
 
     public void newUserScene()
     {
         _sceneManager.get("NewUserScene").add(new JLabel("Add New User"));
+        _sceneManager.get("NewUserScene").setLayout(new GridBagLayout());
 
-        _gridBagConstraints.fill = GridBagConstraints.BOTH;
         _mainMenuButtonUserScene = new JButton("Main Menu");
         _mainMenuButtonUserScene.addActionListener(this);
 
@@ -148,24 +161,67 @@ public class Main extends JFrame implements ActionListener
         _submitButton = new JButton("Add User");
         _submitButton.addActionListener(this);
 
-        _sceneManager.get("NewUserScene").add(_mainMenuButtonUserScene);
+        // Add and Format Components
+        _gridBagConstraints = new GridBagConstraints();
+        _gridBagConstraints.fill = GridBagConstraints.VERTICAL;
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 0;
+        _gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        _gridBagConstraints.anchor = GridBagConstraints.PAGE_START;
+        _sceneManager.get("NewUserScene").add(_mainMenuButtonUserScene, _gridBagConstraints);
 
-        _sceneManager.get("NewUserScene").add(_firstNameLabel);
-        _sceneManager.get("NewUserScene").add(_firstNameTextArea);
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 1;
+        _gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        _sceneManager.get("NewUserScene").add(_firstNameLabel, _gridBagConstraints);
 
-        _sceneManager.get("NewUserScene").add(_lastNameLabel);
-        _sceneManager.get("NewUserScene").add(_lastNameTextArea);
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 1;
+        _sceneManager.get("NewUserScene").add(_firstNameTextArea, _gridBagConstraints);
 
-        _sceneManager.get("NewUserScene").add(_socialSecurityNumberLabel);
-        _sceneManager.get("NewUserScene").add(_socialSecurityNumberTextArea);
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 2;
+        _sceneManager.get("NewUserScene").add(_lastNameLabel, _gridBagConstraints);
 
-        _sceneManager.get("NewUserScene").add(_developerLevelLabel);
-        _sceneManager.get("NewUserScene").add(_developerLevelComboBox);
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 2;
+        _sceneManager.get("NewUserScene").add(_lastNameTextArea, _gridBagConstraints);
 
-        _sceneManager.get("NewUserScene").add(_submitButton);
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 3;
+        _sceneManager.get("NewUserScene").add(_socialSecurityNumberLabel, _gridBagConstraints);
+
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 3;
+        _sceneManager.get("NewUserScene").add(_socialSecurityNumberTextArea, _gridBagConstraints);
+
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 4;
+        _sceneManager.get("NewUserScene").add(_developerLevelLabel, _gridBagConstraints);
+
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 4;
+        _sceneManager.get("NewUserScene").add(_developerLevelComboBox, _gridBagConstraints);
+
+        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 5;
+        _gridBagConstraints.gridwidth = 2;
+        _gridBagConstraints.insets = new Insets(20, 5, 5, 5);
+        _gridBagConstraints.anchor = GridBagConstraints.LAST_LINE_END;
+        _sceneManager.get("NewUserScene").add(_submitButton, _gridBagConstraints);
     } // newUserScene()
 
-    public void submitInfo() {
+    public void submitInfo()
+    {
         NewDeveloper createdUser;   // because inherited classes can also be instantiated to a variable with their base class type
         String developerLevel = _developerLevelComboBox.getSelectedItem().toString();
 
@@ -177,7 +233,10 @@ public class Main extends JFrame implements ActionListener
             throw new IllegalArgumentException("Developer Level cannot be String-ified");
 
         if (_userManager.get(socialSecurityNumber) != null) // this social security number already exists (people can have the same name, not SSN)
+        {
+            JOptionPane.showMessageDialog(this, "Social Security Number Matches Another User!");
             throw new IllegalArgumentException("SSN Matches Another User");
+        }
 
         if (developerLevel.equals("New Developer"))
         {
@@ -189,52 +248,187 @@ public class Main extends JFrame implements ActionListener
             createdUser = new SeniorDeveloper(firstName, lastName, socialSecurityNumber);
         }
 
-        // does it still execute?
-        System.out.println("Hello");
         _userManager.put(socialSecurityNumber, createdUser);    // add user into the user manager
         createdUser.printPaymentInfo();
-    }
+        JOptionPane.showMessageDialog(this, "User Added!");
+    } // submitInfo()
+
+    public void refreshUserList()
+    {
+        _socialSecurityNumberList = new ArrayList<>();
+
+        Enumeration<Integer> developers = _userManager.keys();
+        while (developers.hasMoreElements()) {
+            Integer currentSocialSecurityNumber = developers.nextElement();
+
+            _socialSecurityNumberList.add(currentSocialSecurityNumber);
+        }
+
+        // remove and then readd the component to the panel
+        _sceneManager.get("PaymentInfoScene").remove(_userNameComboBox);
+
+        _userNameComboBox = new JComboBox(_socialSecurityNumberList.toArray());
+
+        _gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 1;
+        _gridBagConstraints.gridwidth = 1;
+        _gridBagConstraints.anchor = GridBagConstraints.CENTER;
+        _sceneManager.get("PaymentInfoScene").add(_userNameComboBox, _gridBagConstraints);
+    } // refreshUserList()
 
     public void paymentInfoScene()
     {
         _sceneManager.get("PaymentInfoScene").add(new JLabel("Payment Info Scene"));
+        _sceneManager.get("PaymentInfoScene").setLayout(new GridBagLayout());
 
-        _gridBagConstraints.fill = GridBagConstraints.BOTH;
+        //_gridBagConstraints.fill = GridBagConstraints.BOTH;
         _mainMenuButtonInfoScene = new JButton("Main Menu");
         _mainMenuButtonInfoScene.addActionListener(this);
 
-        _sceneManager.get("PaymentInfoScene").add(_mainMenuButtonInfoScene);
+        _userNameComboBox = new JComboBox(_socialSecurityNumberList.toArray());
+
+        _showInfoButton = new JButton("Show User Information");
+        _showInfoButton.addActionListener(this);
+
+        _firstNameInfoLabel = new JLabel();
+        _firstNameInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        _lastNameInfoLabel = new JLabel();
+        _lastNameInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        _socialSecurityNumberInfoLabel = new JLabel();
+        _socialSecurityNumberInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        _developerLevelInfoLabel = new JLabel();
+        _developerLevelInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        _label1 = new JLabel("1% of Salary: ");
+        _onePercentSalaryInfoLabel = new JLabel();
+        _onePercentSalaryInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        _label2 = new JLabel("Stocks: ");
+        _stocksInfoLabel = new JLabel();
+        _stocksInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        // Automatically hide these components
+        _label1.setVisible(false);
+        _label2.setVisible(false);
+        _onePercentSalaryInfoLabel.setVisible(false);
+        _stocksInfoLabel.setVisible(false);
+
+        _gridBagConstraints.fill = GridBagConstraints.VERTICAL;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 1;
+        _gridBagConstraints.gridwidth = 1;
+        _gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Select SSN for User"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 0;
+        _sceneManager.get("PaymentInfoScene").add(_mainMenuButtonInfoScene, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 1;
+        _gridBagConstraints.gridwidth = 1;
+        _sceneManager.get("PaymentInfoScene").add(_userNameComboBox, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 2;
+        _gridBagConstraints.gridwidth = 2;
+        _sceneManager.get("PaymentInfoScene").add(_showInfoButton, _gridBagConstraints);
+
+        // Display info
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 3;
+        _gridBagConstraints.gridwidth = 1;
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("First Name:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 3;
+        _sceneManager.get("PaymentInfoScene").add(_firstNameInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 4;
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Last Name:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 4;
+        _sceneManager.get("PaymentInfoScene").add(_lastNameInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 5;
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Social Security Number:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 5;
+        _sceneManager.get("PaymentInfoScene").add(_socialSecurityNumberInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 6;
+        _gridBagConstraints.gridwidth = 2;
+        _sceneManager.get("PaymentInfoScene").add(_developerLevelInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 7;
+        _gridBagConstraints.gridwidth = 1;
+        _sceneManager.get("PaymentInfoScene").add(_label1, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 7;
+        _sceneManager.get("PaymentInfoScene").add(_onePercentSalaryInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 8;
+        _sceneManager.get("PaymentInfoScene").add(_label2, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 8;
+        _sceneManager.get("PaymentInfoScene").add(_stocksInfoLabel, _gridBagConstraints);
     } // paymentInfoScene()
-    public static void infoVisibleTest()
+
+    public void showUserInfo()
     {
-        // New Dev Test
-        NewDeveloper newDev = new NewDeveloper("Franklan", "Taylor", 11111111);
-        newDev.printPaymentInfo(); System.out.println();
-        newDev.addPayment();
-        newDev.addBonus();
-        newDev.printPaymentInfo(); System.out.println();
+        // TODO: This method should be called everytime the user hits the "Show User Info" button.
+        // TODO: Add annual payment to the information shown
+        int selectedSocialSecurityNumber = Integer.parseInt(_userNameComboBox.getSelectedItem().toString());
+        NewDeveloper selectedUser = _userManager.get(selectedSocialSecurityNumber);
 
-        // Junior Developer Test
-        JuniorDeveloper juniorDev = new JuniorDeveloper("Juny", "Dev", 22222222);
-        juniorDev.printPaymentInfo(); System.out.println();
-        juniorDev.addPayment();
-        juniorDev.addBonus();
-        juniorDev.printPaymentInfo(); System.out.println();
+        _firstNameInfoLabel.setText(selectedUser._firstName);
+        _lastNameInfoLabel.setText(selectedUser._lastName);
+        _socialSecurityNumberInfoLabel.setText(String.valueOf(selectedUser._socialSecurityNumber));
 
-        JuniorDeveloper juniorDevTwo = new JuniorDeveloper("Juny The II", "Dev", 44444444);
-        juniorDevTwo.printPaymentInfo(); System.out.println();
-        juniorDevTwo.addPayment();
-        juniorDevTwo.addBonus();
-        juniorDevTwo.addPayment();
-        juniorDevTwo.printPaymentInfo(); System.out.println();
+        if (selectedUser.getClass().equals(NewDeveloper.class)) // If it's a new developer
+        {
+            _developerLevelInfoLabel.setText("<NEW DEVELOPER>");
 
-        // Senior Developer Test
-        SeniorDeveloper seniorDev = new SeniorDeveloper("Seny", "Dev", 33333333);
-        seniorDev.printPaymentInfo(); System.out.println();
-        seniorDev.addPayment();
-        seniorDev.addBonus();
-        seniorDev.printPaymentInfo(); System.out.println();
-    } // infoVisibleTest()
+            _label1.setVisible(false);
+            _label2.setVisible(false);
+            _onePercentSalaryInfoLabel.setVisible(false);
+            _stocksInfoLabel.setVisible(false);
+        } else if (selectedUser.getClass().equals(JuniorDeveloper.class)) {
+            _developerLevelInfoLabel.setText("<JUNIOR DEVELOPER>");
+            _onePercentSalaryInfoLabel.setText(
+                    "$" + ((JuniorDeveloper) selectedUser)._additionalBonusAmount
+            );
+
+            _label1.setVisible(true);
+            _label2.setVisible(false);
+            _onePercentSalaryInfoLabel.setVisible(true);
+            _stocksInfoLabel.setVisible(false);
+        } else {
+            _developerLevelInfoLabel.setText("<SENIOR DEVELOPER>");
+            _onePercentSalaryInfoLabel.setText(
+                    "$" + ((SeniorDeveloper) selectedUser)._additionalBonusAmount
+            );
+            _stocksInfoLabel.setText(String.valueOf(((SeniorDeveloper) selectedUser)._stocks));
+
+            _label1.setVisible(true);
+            _label2.setVisible(true);
+            _onePercentSalaryInfoLabel.setVisible(true);
+            _stocksInfoLabel.setVisible(true);
+        }
+    } // showUserInfo()
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -249,6 +443,7 @@ public class Main extends JFrame implements ActionListener
             _sceneManager.get("MainScene").setVisible(false);
             _sceneManager.get("NewUserScene").setVisible(false);
             _sceneManager.get("PaymentInfoScene").setVisible(true);
+            refreshUserList();
         } else if (buttonSource.equals(_mainMenuButtonUserScene) || buttonSource.equals(_mainMenuButtonInfoScene))
         {
             System.out.println("\u001B[32m" + "SWITCHING TO 'Main Scene'" + "\u001B[0m");
@@ -265,6 +460,10 @@ public class Main extends JFrame implements ActionListener
         {
             System.out.println("\u001B[32m" + "Submitting Information . . ." + "\u001B[0m");
             submitInfo();
+        } else if (buttonSource.equals(_showInfoButton))
+        {
+            System.out.println("\u001B[32m" + "Showing Information . . ." + "\u001B[0m");
+            showUserInfo();
         }
         else {
             System.out.println("\u001B[31m" + "Input Source NOT Recognized (or set up)." + "\u001B[0m");
@@ -276,7 +475,5 @@ public class Main extends JFrame implements ActionListener
     {
         Main application = new Main();
         application.configureWindow();
-
-        //infoVisibleTest();
     } // main()
 }

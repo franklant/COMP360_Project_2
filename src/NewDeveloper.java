@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 public class NewDeveloper{
     protected String _firstName;
     protected String _lastName;
@@ -27,6 +29,7 @@ public class NewDeveloper{
 
         if (socialSecurityNumber != -1 && socialSecurityNumberLength != 8)
         {
+            JOptionPane.showMessageDialog(new Main(), "Social Security Number MUST be 8 Digits!");
             throw new IllegalArgumentException("Social Security Number must be 8 digits!");
         } else {
             _socialSecurityNumber = socialSecurityNumber;
