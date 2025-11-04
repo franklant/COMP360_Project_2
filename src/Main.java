@@ -173,7 +173,7 @@ public class Main extends JFrame implements ActionListener
             throw new IllegalArgumentException("There Are No Employees to Pay!");
         }
 
-        if (confirmPayResult == 0) {
+        if (confirmPayResult == 0) {    // User confirmed "Yes"
             if (withOrWithoutResult.equals("Without Bonus"))
             {
                 Enumeration<NewDeveloper> developers = _userManager.elements();
