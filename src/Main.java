@@ -19,6 +19,8 @@ public class Main extends JFrame implements ActionListener
     JButton _mainMenuButtonUserScene;
     JButton _mainMenuButtonInfoScene;
     JButton _addNewUserButton;
+    JButton _payEmployeesButton;
+    JComboBox _withOrWithoutBonusComboBox;
 
     // New User Components
     JTextArea _firstNameTextArea;
@@ -108,27 +110,95 @@ public class Main extends JFrame implements ActionListener
 
     public void mainScene()
     {
-        _sceneManager.get("MainScene").add(new JLabel("Main Scene"));
-        _sceneManager.get("MainScene").setLayout(new GridBagLayout());      // important to set the layout
-
         _gridBagConstraints = new GridBagConstraints();
         _gridBagConstraints.fill = GridBagConstraints.BOTH;
+
+        _gridBagConstraints.gridwidth = 2;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 0;
+
+        _sceneManager.get("MainScene").setLayout(new GridBagLayout());      // important to set the layout
+        _sceneManager.get("MainScene").add(new JLabel("HUA DONG COMPANY© Payment System"), _gridBagConstraints);
 
         _paymentInfoButton = new JButton("Request Payment Information");
         _paymentInfoButton.addActionListener(this);           // enable the program to listen for actions from btn
 
-        _addNewUserButton = new JButton("Add New User");
+        _addNewUserButton = new JButton("Add New Employee");
         _addNewUserButton.addActionListener(this);
 
+        _payEmployeesButton = new JButton("Pay Employees");
+        _payEmployeesButton.addActionListener(this);
+
+        String[] withOrWithoutBonus = {"Without Bonus", "With Bonus"};
+        _withOrWithoutBonusComboBox = new JComboBox(withOrWithoutBonus);
+
         // Add Components to Scene
-        _gridBagConstraints.gridx = 1;
-        _gridBagConstraints.gridy = 0;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 1;
+        _gridBagConstraints.insets = new Insets(20, 0, 0, 0);
         _sceneManager.get("MainScene").add(_addNewUserButton, _gridBagConstraints);
 
-        _gridBagConstraints.gridx = 2;
-        _gridBagConstraints.gridy = 0;
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 2;
+        _gridBagConstraints.insets = new Insets(0, 0, 0, 0);
         _sceneManager.get("MainScene").add(_paymentInfoButton, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 3;
+        _gridBagConstraints.insets = new Insets(40, 0, 10, 0);
+        _sceneManager.get("MainScene").add(new JLabel("Disburse Payments:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 4;
+        _gridBagConstraints.gridwidth = 1;
+        _gridBagConstraints.insets = new Insets(0, 0, 0, 0);
+        _sceneManager.get("MainScene").add(_payEmployeesButton, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 4;
+        _sceneManager.get("MainScene").add(_withOrWithoutBonusComboBox, _gridBagConstraints);
     } // mainScene()
+
+    public void payEmployees()
+    {
+        String withOrWithoutResult = _withOrWithoutBonusComboBox.getSelectedItem().toString();
+        int confirmPayResult = JOptionPane.showConfirmDialog(
+                this,
+                "CONFIRM: Pay All Employees " + withOrWithoutResult + "?"
+        );
+
+        if (_userManager.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "No Employees to Pay!");
+            throw new IllegalArgumentException("There Are No Employees to Pay!");
+        }
+
+        if (confirmPayResult == 0) {
+            if (withOrWithoutResult.equals("Without Bonus"))
+            {
+                Enumeration<NewDeveloper> developers = _userManager.elements();
+                while (developers.hasMoreElements()) {
+                    NewDeveloper developer = developers.nextElement();
+
+                    developer.addPayment();
+
+                    System.out.println("Total Payment to " + developer._socialSecurityNumber + ": " + developer._totalPayment);
+                }
+            } else {
+                Enumeration<NewDeveloper> developers = _userManager.elements();
+                while (developers.hasMoreElements()) {
+                    NewDeveloper developer = developers.nextElement();
+
+                    developer.addPayment();
+                    developer.addBonus();
+
+                    System.out.println("Total Payment to " + developer._socialSecurityNumber + ": " + developer._totalPayment);
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Payment to All Employees Successful!");
+        }
+    }
 
     public void newUserScene()
     {
@@ -227,6 +297,13 @@ public class Main extends JFrame implements ActionListener
 
         String firstName = _firstNameTextArea.getText();
         String lastName = _lastNameTextArea.getText();
+
+        if (firstName.isEmpty() || lastName.isEmpty() || _socialSecurityNumberTextArea.getText().isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "One Or More Fields Have Not Been Entered!");
+            throw new IllegalArgumentException("1 Or More Fields Have Not Been Entered");
+        }
+
         int socialSecurityNumber = Integer.parseInt(_socialSecurityNumberTextArea.getText());
 
         if (developerLevel == null)
@@ -288,7 +365,7 @@ public class Main extends JFrame implements ActionListener
 
         _userNameComboBox = new JComboBox(_socialSecurityNumberList.toArray());
 
-        _showInfoButton = new JButton("Show User Information");
+        _showInfoButton = new JButton("Show Employee Information");
         _showInfoButton.addActionListener(this);
 
         _firstNameInfoLabel = new JLabel();
@@ -322,7 +399,7 @@ public class Main extends JFrame implements ActionListener
         _gridBagConstraints.gridy = 1;
         _gridBagConstraints.gridwidth = 1;
         _gridBagConstraints.insets = new Insets(5, 5, 5, 5);
-        _sceneManager.get("PaymentInfoScene").add(new JLabel("Select SSN for User"), _gridBagConstraints);
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Select SSN for Employee"), _gridBagConstraints);
 
         _gridBagConstraints.gridx = 1;
         _gridBagConstraints.gridy = 0;
@@ -391,12 +468,21 @@ public class Main extends JFrame implements ActionListener
     {
         // TODO: This method should be called everytime the user hits the "Show User Info" button.
         // TODO: Add annual payment to the information shown
+        if (_userNameComboBox.getItemCount() == 0) // there are no employees within the userManager
+        {
+            JOptionPane.showMessageDialog(this, "No Employee Information Has Been Added!");
+            throw new IllegalArgumentException("No Employee Information Is Available");
+        }
+
         int selectedSocialSecurityNumber = Integer.parseInt(_userNameComboBox.getSelectedItem().toString());
         NewDeveloper selectedUser = _userManager.get(selectedSocialSecurityNumber);
 
         _firstNameInfoLabel.setText(selectedUser._firstName);
         _lastNameInfoLabel.setText(selectedUser._lastName);
-        _socialSecurityNumberInfoLabel.setText(String.valueOf(selectedUser._socialSecurityNumber));
+
+        String SSN = String.valueOf(selectedUser._socialSecurityNumber);
+        String formattedSocialSecurityNumber = SSN.substring(0, 3) + "-" + SSN.substring(3, 5) + "-" + SSN.substring(5, 8);
+        _socialSecurityNumberInfoLabel.setText(formattedSocialSecurityNumber);
 
         if (selectedUser.getClass().equals(NewDeveloper.class)) // If it's a new developer
         {
@@ -464,6 +550,10 @@ public class Main extends JFrame implements ActionListener
         {
             System.out.println("\u001B[32m" + "Showing Information . . ." + "\u001B[0m");
             showUserInfo();
+        } else if (buttonSource.equals(_payEmployeesButton))
+        {
+            System.out.println("\u001B[32m" + "Paying Employees . . ." + "\u001B[0m");
+            payEmployees();
         }
         else {
             System.out.println("\u001B[31m" + "Input Source NOT Recognized (or set up)." + "\u001B[0m");
