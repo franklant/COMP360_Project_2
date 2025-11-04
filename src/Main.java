@@ -564,7 +564,7 @@ public class Main extends JFrame implements ActionListener
         _stocksInfoLabel.setVisible(false);
 
         _totalPaymentInfoLabel.setText("");
-    }
+    } // clearInfoFields
 
     @Override
     public void actionPerformed(ActionEvent e) {
