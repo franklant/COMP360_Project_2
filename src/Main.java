@@ -38,9 +38,12 @@ public class Main extends JFrame implements ActionListener
     JLabel _firstNameInfoLabel;
     JLabel _lastNameInfoLabel;
     JLabel _socialSecurityNumberInfoLabel;
+    JLabel _salaryInfoLabel;
     JLabel _developerLevelInfoLabel;
     JLabel _onePercentSalaryInfoLabel;          // these components appear based on developer level
     JLabel _stocksInfoLabel;
+    JLabel _totalPaymentInfoLabel;
+
 
     JLabel _label1;                             // additional labels to be hidden
     JLabel _label2;
@@ -377,6 +380,9 @@ public class Main extends JFrame implements ActionListener
         _socialSecurityNumberInfoLabel = new JLabel();
         _socialSecurityNumberInfoLabel.setPreferredSize(new Dimension(100, 20));
 
+        _salaryInfoLabel = new JLabel();
+        _salaryInfoLabel.setPreferredSize(new Dimension(100, 20));
+
         _developerLevelInfoLabel = new JLabel();
         _developerLevelInfoLabel.setPreferredSize(new Dimension(100, 20));
 
@@ -387,6 +393,9 @@ public class Main extends JFrame implements ActionListener
         _label2 = new JLabel("Stocks: ");
         _stocksInfoLabel = new JLabel();
         _stocksInfoLabel.setPreferredSize(new Dimension(100, 20));
+
+        _totalPaymentInfoLabel = new JLabel();
+        _totalPaymentInfoLabel.setPreferredSize(new Dimension(100, 20));
 
         // Automatically hide these components
         _label1.setVisible(false);
@@ -443,31 +452,46 @@ public class Main extends JFrame implements ActionListener
 
         _gridBagConstraints.gridx = 0;
         _gridBagConstraints.gridy = 6;
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Salary:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 6;
+        _sceneManager.get("PaymentInfoScene").add(_salaryInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 7;
         _gridBagConstraints.gridwidth = 2;
         _sceneManager.get("PaymentInfoScene").add(_developerLevelInfoLabel, _gridBagConstraints);
 
         _gridBagConstraints.gridx = 0;
-        _gridBagConstraints.gridy = 7;
+        _gridBagConstraints.gridy = 8;
         _gridBagConstraints.gridwidth = 1;
         _sceneManager.get("PaymentInfoScene").add(_label1, _gridBagConstraints);
 
         _gridBagConstraints.gridx = 1;
-        _gridBagConstraints.gridy = 7;
+        _gridBagConstraints.gridy = 8;
         _sceneManager.get("PaymentInfoScene").add(_onePercentSalaryInfoLabel, _gridBagConstraints);
 
         _gridBagConstraints.gridx = 0;
-        _gridBagConstraints.gridy = 8;
+        _gridBagConstraints.gridy = 9;
         _sceneManager.get("PaymentInfoScene").add(_label2, _gridBagConstraints);
 
         _gridBagConstraints.gridx = 1;
-        _gridBagConstraints.gridy = 8;
+        _gridBagConstraints.gridy = 9;
         _sceneManager.get("PaymentInfoScene").add(_stocksInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 10;
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Total Payment:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 10;
+        _sceneManager.get("PaymentInfoScene").add(_totalPaymentInfoLabel, _gridBagConstraints);
     } // paymentInfoScene()
 
     public void showUserInfo()
     {
-        // TODO: This method should be called everytime the user hits the "Show User Info" button.
-        // TODO: Add annual payment to the information shown
+        // This method should be called everytime the user hits the "Show User Info" button.
         if (_userNameComboBox.getItemCount() == 0) // there are no employees within the userManager
         {
             JOptionPane.showMessageDialog(this, "No Employee Information Has Been Added!");
@@ -483,6 +507,8 @@ public class Main extends JFrame implements ActionListener
         String SSN = String.valueOf(selectedUser._socialSecurityNumber);
         String formattedSocialSecurityNumber = SSN.substring(0, 3) + "-" + SSN.substring(3, 5) + "-" + SSN.substring(5, 8);
         _socialSecurityNumberInfoLabel.setText(formattedSocialSecurityNumber);
+
+        _salaryInfoLabel.setText("$" + selectedUser._salary);
 
         if (selectedUser.getClass().equals(NewDeveloper.class)) // If it's a new developer
         {
@@ -514,7 +540,31 @@ public class Main extends JFrame implements ActionListener
             _onePercentSalaryInfoLabel.setVisible(true);
             _stocksInfoLabel.setVisible(true);
         }
+
+        _totalPaymentInfoLabel.setText("$" + selectedUser._totalPayment);
     } // showUserInfo()
+
+    public void clearInfoFields()
+    {
+        // Add New Employee Fields
+        _firstNameTextArea.setText("");
+        _lastNameTextArea.setText("");
+        _socialSecurityNumberTextArea.setText("");
+
+        // Payment Info Fields
+        _firstNameInfoLabel.setText("");
+        _lastNameInfoLabel.setText("");
+        _socialSecurityNumberInfoLabel.setText("");
+        _salaryInfoLabel.setText("");
+        _developerLevelInfoLabel.setText("<>");
+
+        _label1.setVisible(false);
+        _label2.setVisible(false);
+        _onePercentSalaryInfoLabel.setVisible(false);
+        _stocksInfoLabel.setVisible(false);
+
+        _totalPaymentInfoLabel.setText("");
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -536,6 +586,8 @@ public class Main extends JFrame implements ActionListener
             _sceneManager.get("PaymentInfoScene").setVisible(false);
             _sceneManager.get("NewUserScene").setVisible(false);
             _sceneManager.get("MainScene").setVisible(true);
+
+            clearInfoFields();
         } else if (buttonSource.equals(_addNewUserButton))
         {
             System.out.println("\u001B[32m" + "SWITCHING TO 'New User Scene'" + "\u001B[0m");
