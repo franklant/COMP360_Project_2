@@ -167,7 +167,7 @@ public class Main extends JFrame implements ActionListener
                 "CONFIRM: Pay All Employees " + withOrWithoutResult + "?"
         );
 
-        if (_userManager.isEmpty())
+        if (_userManager.isEmpty() && confirmPayResult == 0)
         {
             JOptionPane.showMessageDialog(this, "No Employees to Pay!");
             throw new IllegalArgumentException("There Are No Employees to Pay!");
@@ -198,7 +198,7 @@ public class Main extends JFrame implements ActionListener
 
             JOptionPane.showMessageDialog(this, "Payment to All Employees Successful!");
         }
-    }
+    } // payEmployees()
 
     public void newUserScene()
     {
