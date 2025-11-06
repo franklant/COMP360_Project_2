@@ -43,6 +43,7 @@ public class Main extends JFrame implements ActionListener
     JLabel _onePercentSalaryInfoLabel;          // these components appear based on developer level
     JLabel _stocksInfoLabel;
     JLabel _totalPaymentInfoLabel;
+    JLabel _annualPaymentInfoLabel;
 
 
     JLabel _label1;                             // additional labels to be hidden
@@ -397,6 +398,9 @@ public class Main extends JFrame implements ActionListener
         _totalPaymentInfoLabel = new JLabel();
         _totalPaymentInfoLabel.setPreferredSize(new Dimension(100, 20));
 
+        _annualPaymentInfoLabel = new JLabel();
+        _annualPaymentInfoLabel.setPreferredSize(new Dimension(100, 20));
+
         // Automatically hide these components
         _label1.setVisible(false);
         _label2.setVisible(false);
@@ -487,6 +491,14 @@ public class Main extends JFrame implements ActionListener
         _gridBagConstraints.gridx = 1;
         _gridBagConstraints.gridy = 10;
         _sceneManager.get("PaymentInfoScene").add(_totalPaymentInfoLabel, _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 0;
+        _gridBagConstraints.gridy = 11;
+        _sceneManager.get("PaymentInfoScene").add(new JLabel("Annual Payment:"), _gridBagConstraints);
+
+        _gridBagConstraints.gridx = 1;
+        _gridBagConstraints.gridy = 11;
+        _sceneManager.get("PaymentInfoScene").add(_annualPaymentInfoLabel, _gridBagConstraints);
     } // paymentInfoScene()
 
     public void showUserInfo()
@@ -500,6 +512,8 @@ public class Main extends JFrame implements ActionListener
 
         int selectedSocialSecurityNumber = Integer.parseInt(_userNameComboBox.getSelectedItem().toString());
         NewDeveloper selectedUser = _userManager.get(selectedSocialSecurityNumber);
+
+        double calculateAnnualPayment = selectedUser._salary + selectedUser._BONUS_AMOUNT;
 
         _firstNameInfoLabel.setText(selectedUser._firstName);
         _lastNameInfoLabel.setText(selectedUser._lastName);
@@ -519,6 +533,8 @@ public class Main extends JFrame implements ActionListener
             _onePercentSalaryInfoLabel.setVisible(false);
             _stocksInfoLabel.setVisible(false);
         } else if (selectedUser.getClass().equals(JuniorDeveloper.class)) {
+            calculateAnnualPayment += ((JuniorDeveloper) selectedUser)._additionalBonusAmount;
+
             _developerLevelInfoLabel.setText("<JUNIOR DEVELOPER>");
             _onePercentSalaryInfoLabel.setText(
                     "$" + ((JuniorDeveloper) selectedUser)._additionalBonusAmount
@@ -529,6 +545,8 @@ public class Main extends JFrame implements ActionListener
             _onePercentSalaryInfoLabel.setVisible(true);
             _stocksInfoLabel.setVisible(false);
         } else {
+            calculateAnnualPayment += ((SeniorDeveloper) selectedUser)._additionalBonusAmount;
+
             _developerLevelInfoLabel.setText("<SENIOR DEVELOPER>");
             _onePercentSalaryInfoLabel.setText(
                     "$" + ((SeniorDeveloper) selectedUser)._additionalBonusAmount
@@ -542,6 +560,7 @@ public class Main extends JFrame implements ActionListener
         }
 
         _totalPaymentInfoLabel.setText("$" + selectedUser._totalPayment);
+        _annualPaymentInfoLabel.setText("$" + calculateAnnualPayment * 12);     // monthly salary + bonuses for all 12 months
     } // showUserInfo()
 
     public void clearInfoFields()
@@ -564,6 +583,7 @@ public class Main extends JFrame implements ActionListener
         _stocksInfoLabel.setVisible(false);
 
         _totalPaymentInfoLabel.setText("");
+        _annualPaymentInfoLabel.setText("");
     } // clearInfoFields
 
     @Override
