@@ -522,7 +522,7 @@ public class Main extends JFrame implements ActionListener
         String formattedSocialSecurityNumber = SSN.substring(0, 3) + "-" + SSN.substring(3, 5) + "-" + SSN.substring(5, 8);
         _socialSecurityNumberInfoLabel.setText(formattedSocialSecurityNumber);
 
-        _salaryInfoLabel.setText("$" + selectedUser._salary);
+        _salaryInfoLabel.setText("$" + selectedUser._salary + " /mo.");
 
         if (selectedUser.getClass().equals(NewDeveloper.class)) // If it's a new developer
         {
@@ -560,7 +560,7 @@ public class Main extends JFrame implements ActionListener
         }
 
         _totalPaymentInfoLabel.setText("$" + selectedUser._totalPayment);
-        _annualPaymentInfoLabel.setText("$" + calculateAnnualPayment * 12);     // monthly salary + bonuses for all 12 months
+        _annualPaymentInfoLabel.setText("$" + calculateAnnualPayment * 12 + " /yr.");     // monthly salary + bonuses for all 12 months
     } // showUserInfo()
 
     public void clearInfoFields()
