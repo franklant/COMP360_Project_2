@@ -1,3 +1,10 @@
+// Franklan Taylor
+// COMP360-001
+// 11/11/2025
+// The Junior Developer has the same base benefits as the new developer, except an additonal 1% payment of their
+// monthly salary
+
+
 public class JuniorDeveloper extends NewDeveloper{
     protected double _additionalBonusAmount;
 

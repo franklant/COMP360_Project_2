@@ -1,3 +1,9 @@
+// Franklan Taylor
+// COMP360-001
+// 11/11/2025
+// The new developer serves as the base level of an employee at the Hua Dong company. They receive a salary of $10000
+// with no additional benefits
+
 import javax.swing.*;
 
 public class NewDeveloper{

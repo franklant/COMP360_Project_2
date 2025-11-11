@@ -1,3 +1,8 @@
+// Franklan Taylor
+// COMP360-001
+// 11/11/2025
+// The senior developer gets the same benefits as the junior developer, but with an additional 100 stock bonus as well.
+
 public class SeniorDeveloper extends JuniorDeveloper{
     protected int _stocks;
 

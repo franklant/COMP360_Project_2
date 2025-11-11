@@ -1,3 +1,9 @@
+// Franklan Taylor
+// COMP360-001
+// 11/11/2025
+// A payment system where you can pay employees and see their annual payment and other information based off of their
+// developer level
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
