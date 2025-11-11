@@ -5,7 +5,7 @@ public class JuniorDeveloper extends NewDeveloper{
     {
         super();
         _role = "Junior Developer";
-        _salary = 13000;
+        // _salary = 13000;
 
     } // JuniorDeveloper()
 
@@ -13,7 +13,7 @@ public class JuniorDeveloper extends NewDeveloper{
     {
         super(firstName, lastName, socialSecurityNumber);
         _role = "Junior Developer";
-        _salary = 13000;
+        // _salary = 13000;
         _additionalBonusAmount = (_salary / 100.00);    // additional bonus include addition 1% of salary
     } // JuniorDeveloper(String firstName, String lastName, int socialSecurityNumber)
 
